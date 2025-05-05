@@ -1,0 +1,11 @@
+{
+	"scripts": {
+		"lint": "eslint . --ext .ts,.tsx"
+	},
+	"devDependencies": {
+		"vite": "^6.3.4"
+	},
+	"dependencies": {
+		"mathjs": "^14.4.0"
+	}
+}
