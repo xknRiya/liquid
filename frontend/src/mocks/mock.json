@@ -1,0 +1,68 @@
+{
+    "employees": [
+        {
+            "legajo": 1000,
+            "nombre": "Nombre",
+            "apellido": "Apellido",
+            "tipo_documento": "DNI",
+            "nro_documento": 12312312,
+            "fecha_nac": "1990-01-01",
+            "direccion_legal": "Direccion legal 123",
+            "direccion_real": "Direccion real 789",
+            "estado_civil": "soltero",
+            "telefono": 123456789,
+            "email": "email@email.com",
+            "nivel_academico": "Bachiller",
+            "titulo_obtenido": "Titulo",
+            "cuit": 20123123128,
+            "fecha_ingreso": "2025-01-01",
+            "tipo_servicios": "común",
+            "sector_id": 1,
+            "categoria_nombre": "Administrativo A",
+            "modo_liquidacion": "por mes",
+            "afiliado_sindicato": "si",
+            "sector": {
+                "categoria_nombre": "Administrativo A",
+                "nombre_sector": "Comercio",
+                "ley": "20.744",
+                "sindicato": "Sindicato",
+                "obra_social": "Obra social",
+                "cct": "123/45"
+            }
+        }
+    ],
+    "employer": {
+        "nombre": "Algo SRL",
+        "direccion_laboral": "Direccion laboral 123",
+        "cuit": "20123123128"
+    },
+    "remunerations": {
+        "base": {
+            "remuneracion_id": 1,
+            "sector_id": 1,
+            "categoria_nombre": "Administrativo A",
+            "nombre": "Salario",
+            "tipo": "absoluta",
+            "valor": 800000
+        },
+        "remunerations": [
+            {
+                "remuneracion_id": 2,
+                "sector_id": 1,
+                "categoria_nombre": "Administrativo A",
+                "nombre": "Vacaciones proporcionales 2024",
+                "tipo": "relativa",
+                "tipo_unidad": "día",
+                "valor": 8
+            },
+            {
+                "remuneracion_id": 3,
+                "sector_id": 1,
+                "categoria_nombre": "Administrativo A",
+                "nombre": "Presentismo",
+                "tipo": "relativa",
+                "valor": 8.33
+            }
+        ]
+    }
+}

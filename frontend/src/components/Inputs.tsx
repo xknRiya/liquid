@@ -74,7 +74,7 @@ export const Inputs: React.FC = () => {
                     <datalist ref={datalistRef} id='employees-datalist' >
                         {
                             employees.map((employee, index) =>
-                                <option key={index} value={employee.legajo} onClick={() => setInputValue(employee.legajo)}>
+                                <option key={index} value={employee.legajo} onClick={() => setInputValue((employee.legajo).toString())}>
                                     {employee.legajo} - {employee.apellido}, {employee.nombre}
                                 </option>
                             )

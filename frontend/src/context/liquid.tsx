@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { AllRemunerationsFront, Employee, EmployeeMin, Employer, Remunerations } from "../interfaces";
 import debounce from "just-debounce-it";
 
+import mockDB from "../mocks/mock.json";
 
 interface LiquidContextType {
     inputRef: React.RefObject<HTMLInputElement | null>;
@@ -22,6 +23,10 @@ export const LiquidContext = React.createContext<LiquidContextType | null>(null)
 
 export const LiquidProvider = ({ children }: { children: React.ReactNode }) => {
 
+    const [useDB, setUseDB] = useState(false);
+
+    // setUseDB(true);
+
     const [inputValue, setInputValue] = useState('')
     const [remunerations, setRemunerations] = useState<Remunerations>()
     const [employee, setEmployee] = useState<Employee>()
@@ -36,31 +41,39 @@ export const LiquidProvider = ({ children }: { children: React.ReactNode }) => {
 
     const legajoSet = useMemo(() => new Set(employees.map(employee => employee.legajo)), [employees])
 
-    const debouncedGetEmployees = useCallback(debounce((query: string) => {
-        if (query.length > 2) {
-            fetch(`http://localhost:3000/employees/inexact/${query}`)
-                .then(res => res.json())
-                .then(data =>
-                    setEmployees(data)
-                )
-                .catch(err => console.log(err))
+    const debouncedGetEmployees = useCallback(debounce((query: number) => {
+        if (`${query}`.length > 2) {
+            if (useDB) {
+                fetch(`http://localhost:3000/employees/inexact/${query}`)
+                    .then(res => res.json())
+                    .then(data =>
+                        setEmployees(data)
+                    )
+                    .catch(err => console.log(err))
+            } else {
+                setEmployees(mockDB.employees);
+            }
         }
     }, 300), [employee]);
 
     const debouncedGetEmployee = useCallback(
-        debounce((employeeLegajo: string) => {
+        debounce((employeeLegajo: number) => {
             employees.forEach(employee => {
                 if (employee.legajo == employeeLegajo) {
-                    fetch(`http://localhost:3000/employee/${employeeLegajo}`)
-                        .then(res => res.json())
-                        .then(data => {
-                            const newEmployee = {
-                                ...data.employee,
-                                sector: data.sector
-                            };
-                            setEmployee(newEmployee)
-                        })
-                        .catch(err => console.log(err))
+                    if (useDB) {
+                        fetch(`http://localhost:3000/employee/${employeeLegajo}`)
+                            .then(res => res.json())
+                            .then(data => {
+                                const newEmployee = {
+                                    ...data.employee,
+                                    sector: data.sector
+                                };
+                                setEmployee(newEmployee)
+                            })
+                            .catch(err => console.log(err))
+                    } else {
+                        setEmployee(mockDB.employees[0] as Employee);
+                    }
                 }
             })
         }, 500), [employees]);
@@ -69,25 +82,36 @@ export const LiquidProvider = ({ children }: { children: React.ReactNode }) => {
     useEffect(() => {
         setEmployeeRemunerations([])
         if (employee) {
-            fetch(`http://localhost:3000/remunerations/${employee?.sector_id}/category/${employee?.categoria_nombre}`)
-                .then(res => res.json())
-                .then(data => setRemunerations(data))
-                .catch(err => console.log(err))
+            if (useDB) {
+                fetch(`http://localhost:3000/remunerations/${employee?.sector_id}/category/${employee?.categoria_nombre}`)
+                    .then(res => res.json())
+                    .then(data => setRemunerations(data))
+                    .catch(err => console.log(err))
+            } else {
+                setRemunerations(mockDB.remunerations as Remunerations);
+            }
+
         }
     }, [employee])
 
     useEffect(() => {
-        fetch(`http://localhost:3000/employer`)
-            .then(res => res.json())
-            .then(data => setEmployer(data))
-            .catch(err => console.log(err))
+        if (useDB) {
+            fetch(`http://localhost:3000/employer`)
+                .then(res => res.json())
+                .then(data => setEmployer(data))
+                .catch(err => console.log(err))
+        } else {
+            setEmployer(mockDB.employer);
+        }
     }, [])
 
     useEffect(() => {
-        if (legajoSet.has(inputValue)) {
-            debouncedGetEmployee(inputValue);
+        const value = parseInt(inputValue);
+        if (isNaN(value)) return;
+        if (legajoSet.has(value)) {
+            debouncedGetEmployee(value);
         } else {
-            debouncedGetEmployees(inputValue);
+            debouncedGetEmployees(value);
         };
     }, [inputValue])
 

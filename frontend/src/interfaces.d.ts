@@ -1,6 +1,6 @@
 export interface EmployeeMin {
-    cuit: string;
-    legajo: string;
+    legajo: number;
+    cuit: number;
     nombre: string;
     apellido: string;
 }
@@ -37,27 +37,30 @@ export interface Sector {
     cct: string;
 }
 
-export interface Employee {
-    legajo: string;
-    nombre: string;
-    apellido: string;
-    tipo_documento: string;
-    nro_documento: string;
+type TipoDocumento = "DNI" | "Pasaporte" | "CUIT";
+
+type ModoLiquidacion = "por mes" | "por hora" | "por jornada";
+type TipoServicios = "común" | "insalubre";
+
+type EstadoCivil = "soltero" | "casado" | "viudo" | "divorciado";
+
+export interface Employee extends EmployeeMin {
+    tipo_documento: TipoDocumento;
+    nro_documento: number;
     fecha_nac: string;
     direccion_legal: string;
     direccion_real: string;
-    estado_civil: string;
-    telefono: string;
+    estado_civil: EstadoCivil;
+    telefono: number;
     email: string;
     nivel_academico: string;
     titulo_obtenido: string;
-    cuit: string;
     fecha_ingreso: string;
-    tipo_servicios: string;
-    sector_id: string;
+    tipo_servicios: TipoServicios;
+    sector_id: number;
     categoria_nombre: string;
-    modo_liquidacion: string;
-    afiliado_sindicato: string;
+    modo_liquidacion: ModoLiquidacion;
+    afiliado_sindicato: "si" | "no";
     sector: Sector;
 }
 
