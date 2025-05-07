@@ -52,3 +52,16 @@ export default tseslint.config({
   },
 })
 ```
+
+
+## About 
+
+1 - 100 remunerativos
+101 - 199 descuentos
+200 - 299 retenciones/deducciones
+
+Suma remunerativos ->  total remunerativos
+
+$total remunerativos / 100 -> base de descuentos, deducciones y retenciones$
+
+antiguedad ->  1/01/2000 - periodo (ejemplo: 03/2025)
