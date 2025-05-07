@@ -71,13 +71,13 @@
 .inputs-option div {
     display: flex;
     align-items: center;
-    height: 50px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
 }
 
 .inputs-option span {
     display: block;
     width: 100%;
-
     padding-top: 10px;
     padding-left: 20px;
     height: min-content;
@@ -89,7 +89,6 @@
     height: 40px;
     width: 100%;
     box-sizing: border-box;
-    margin-top: 10px
 }
 
 select.inputs-option>option {
@@ -99,28 +98,34 @@ select.inputs-option>option {
     border-radius: 10px;
 }
 
-#employee-file-number>input~datalist {
+div.dropdown-menu {
+    position: relative;
+    display: inline-block;
+    flex-basis: 100%;
+    height: 0;
+}
+
+.dropdown-menu>datalist {
     position: absolute;
-    margin-top: 140px;
     background-color: #333;
     width: 100%;
     border-radius: 10px;
     z-index: 10;
 }
 
-#employee-file-number>input~datalist>option {
+.dropdown-menu>datalist>option {
     color: white;
     padding: 10px;
     cursor: pointer;
     border-radius: 10px;
 }
 
-#employee-file-number>input~datalist>option:hover {
+.dropdown-menu>datalist>option:hover {
     background-color: #555;
     color: white;
 }
 
-#employee-file-number>input~datalist.show, #employee-file-number>input~datalist.show>option {
+.dropdown-menu>datalist.show, .dropdown-menu>datalist.show>option {
     display: block;
 }
 

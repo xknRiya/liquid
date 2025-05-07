@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { AllRemunerationsFront, Employee, EmployeeMin, Employer, Period, Remunerations } from "../interfaces";
 import debounce from "just-debounce-it";
 
@@ -8,8 +8,6 @@ const VITE_USE_DB = import.meta.env.VITE_USE_DB;
 
 
 interface LiquidContextType {
-    inputRef: React.RefObject<HTMLInputElement | null>;
-    datalistRef: React.RefObject<HTMLDataListElement | null>;
     inputValue: string;
     setInputValue: React.Dispatch<React.SetStateAction<string>>;
     employer?: Employer;
@@ -39,9 +37,6 @@ export const LiquidProvider = ({ children }: { children: React.ReactNode }) => {
 
     const [employeeRemunerations, setEmployeeRemunerations] = useState<AllRemunerationsFront[]>([])
     const [selectedRemuneration, setSelectedRemuneration] = useState<AllRemunerationsFront>()
-
-    const inputRef = useRef<HTMLInputElement>(null);
-    const datalistRef = useRef<HTMLDataListElement>(null);
 
     const legajoSet = useMemo(() => new Set(employees.map(employee => employee.legajo)), [employees])
 
@@ -120,20 +115,6 @@ export const LiquidProvider = ({ children }: { children: React.ReactNode }) => {
     }, [inputValue])
 
     useEffect(() => {
-        const handleClick = (event: MouseEvent) => {
-            if (event.target === inputRef.current) {
-                datalistRef.current?.classList.add('show');
-            } else if (event.target != datalistRef.current) {
-                if (datalistRef.current) {
-                    datalistRef.current.classList.remove('show');
-                }
-            };
-        };
-        document.addEventListener('click', handleClick);
-        return () => document.removeEventListener('click', handleClick);
-    }, []);
-
-    useEffect(() => {
         if (!selectedRemuneration) return;
         const indexOfSelectedRemuneration = employeeRemunerations.findIndex(remuneration => remuneration.remuneracion_id === selectedRemuneration.remuneracion_id);
         let newEmployeeRemunerations = [...employeeRemunerations];
@@ -148,8 +129,6 @@ export const LiquidProvider = ({ children }: { children: React.ReactNode }) => {
 
     return (
         <LiquidContext.Provider value={{
-            inputRef,
-            datalistRef,
             inputValue,
             setInputValue,
             employer,
