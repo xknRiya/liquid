@@ -67,7 +67,7 @@ export interface Employee extends EmployeeMin {
 export interface Employer {
     nombre: string;
     direccion_laboral: string;
-    cuit: string;
+    cuit: number;
 }
 
 export interface BaseRemuneration {
@@ -112,3 +112,5 @@ export interface Remunerations {
     base: BasicRemuneration;
     remunerations: OtherRemunerations[];
 }
+
+export type Period = { month: number, year: number };

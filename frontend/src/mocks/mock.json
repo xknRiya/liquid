@@ -34,7 +34,7 @@
     "employer": {
         "nombre": "Algo SRL",
         "direccion_laboral": "Direccion laboral 123",
-        "cuit": "20123123128"
+        "cuit": 20123123128
     },
     "remunerations": {
         "base": {

@@ -1,8 +1,11 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { AllRemunerationsFront, Employee, EmployeeMin, Employer, Remunerations } from "../interfaces";
+import { AllRemunerationsFront, Employee, EmployeeMin, Employer, Period, Remunerations } from "../interfaces";
 import debounce from "just-debounce-it";
 
 import mockDB from "../mocks/mock.json";
+
+const VITE_USE_DB = import.meta.env.VITE_USE_DB;
+
 
 interface LiquidContextType {
     inputRef: React.RefObject<HTMLInputElement | null>;
@@ -16,6 +19,8 @@ interface LiquidContextType {
     selectedRemuneration?: AllRemunerationsFront;
     setSelectedRemuneration: (remuneration: AllRemunerationsFront) => void;
     employeeRemunerations: AllRemunerationsFront[];
+    period: Period;
+    setPeriod: (period: Period) => void;
     // setEmployeeRemunerations: (remunerations: AllRemunerationsFront[]) => void;
 }
 
@@ -23,15 +28,14 @@ export const LiquidContext = React.createContext<LiquidContextType | null>(null)
 
 export const LiquidProvider = ({ children }: { children: React.ReactNode }) => {
 
-    const [useDB, setUseDB] = useState(false);
-
-    // setUseDB(true);
+    const useDB = VITE_USE_DB === 'true';
 
     const [inputValue, setInputValue] = useState('')
     const [remunerations, setRemunerations] = useState<Remunerations>()
     const [employee, setEmployee] = useState<Employee>()
     const [employees, setEmployees] = useState<EmployeeMin[]>([])
     const [employer, setEmployer] = useState<Employer>()
+    const [period, setPeriod] = useState({ month: 3, year: 2025 });
 
     const [employeeRemunerations, setEmployeeRemunerations] = useState<AllRemunerationsFront[]>([])
     const [selectedRemuneration, setSelectedRemuneration] = useState<AllRemunerationsFront>()
@@ -155,7 +159,8 @@ export const LiquidProvider = ({ children }: { children: React.ReactNode }) => {
             selectedRemuneration,
             setSelectedRemuneration,
             employeeRemunerations,
-            // setEmployeeRemunerations,
+            period,
+            setPeriod,
         }}>
             {children}
         </LiquidContext.Provider>
