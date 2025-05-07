@@ -1,5 +1,9 @@
 // import { evaluate } from "mathjs";
-import { useEffect, useRef } from "react";
+import {
+    useEffect,
+    useRef,
+    // useState
+} from "react";
 import { useLiquid } from "../hooks/useLiquid";
 import { OtherRemunerations } from "../interfaces";
 
@@ -16,7 +20,7 @@ interface InputContainerProps {
     [key: string]: unknown;
 };
 
-export const InputContainer: React.FC<InputContainerProps> = ({ label, id, value, onChange, children, type, placeholder, ref, prefix, ...props }) => {
+const InputContainer: React.FC<InputContainerProps> = ({ label, id, value, onChange, children, type, placeholder, ref, prefix, ...props }) => {
     return (
         <div id={id}>
             <label htmlFor={id}>{label}</label>
@@ -29,6 +33,40 @@ export const InputContainer: React.FC<InputContainerProps> = ({ label, id, value
         </div>
     );
 };
+
+// const DropdownInput: React.FC<InputContainerProps> = ({ label, id, value, children, type, placeholder, ref, prefix, ...props }) => {
+//     const [show, setShow] = useState(false);
+//     const { remunerations, setSelectedRemuneration } = useLiquid();
+
+//     const handleOptionClick = (remuneration: OtherRemunerations) => {
+//         if (!remuneration) return;
+//         if (!remunerations) return;
+//         const newRemuneration = {
+//             ...remuneration,
+//             unidades: 1,
+//             valor: remuneration.tipo === 'relativa' ?
+//                 remunerations.base.valor * remuneration.valor / 100 :
+//                 remuneration.valor
+//         };
+//         setSelectedRemuneration(newRemuneration);
+//     };
+
+//     return (
+//         <div id={id}>
+//             <label htmlFor={id}>{label}</label>
+//             {
+//                 prefix &&
+//                 <span>{prefix}</span>
+//             }
+//             <input ref={ref} type={type || 'text'} name={id} value={value} autoComplete='off' onFocus={() => setShow(true)} onBlur={() => setShow(false)} placeholder={placeholder || 'Some text'} {...props} readOnly />
+//             <div className='dropdown-menu'>
+//                 <datalist id='remunerations-datalist' className={show ? 'show' : ''}>
+//                     {children}
+//                 </datalist>
+//             </div>
+//         </div >
+//     )
+// };
 
 export const Inputs: React.FC = () => {
     const {
@@ -57,12 +95,18 @@ export const Inputs: React.FC = () => {
             if (target.classList.contains('trigger')) {
                 const dropdown = father.querySelector('.dropdown-menu > datalist');
                 if (!dropdown) return;
-                dropdown.classList.add('show');
+
+                if (target.id === 'remunerations-input' && !remunerations) {
+                    target.classList.add('error');
+                } else {
+                    target.classList.remove('error');
+                    dropdown.classList.add('show');
+                };
             };
         };
         document.addEventListener('click', handleClick);
         return () => document.removeEventListener('click', handleClick);
-    }, []);
+    }, [remunerations]);
 
     const inputOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.value === '') return setInputValue('');
@@ -72,16 +116,15 @@ export const Inputs: React.FC = () => {
     const handleOptionClick = (remuneration: OtherRemunerations) => {
         if (!remuneration) return;
         if (!remunerations) return;
-        console.log('remuneration', remuneration);
         const newRemuneration = {
             ...remuneration,
             unidades: 1,
             valor: remuneration.tipo === 'relativa' ?
                 remunerations.base.valor * remuneration.valor / 100 :
                 remuneration.valor
-        }
+        };
         setSelectedRemuneration(newRemuneration);
-    }
+    };
 
     const selectedRemunerationUnitsOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = parseInt(event.target.value);
@@ -118,6 +161,25 @@ export const Inputs: React.FC = () => {
                     </div>
                 </InputContainer>
             </div>
+            {/* <div className="inputs-option">
+                <DropdownInput
+                    label="Seleccione la remuneración: "
+                    id='remunerations-select'
+                    value={selectedRemuneration?.nombre || ''}
+                    placeholder="Seleccione la remuneración"
+                    className='trigger'>
+                    {remunerations?.base &&
+                        <>
+                            <option value={remunerations.base.nombre} onClick={() => handleOptionClick(remunerations.base)}>{remunerations?.base.nombre}</option>
+                            {
+                                remunerations?.remunerations.map((remuneration) => (
+                                    <option key={remuneration.remuneracion_id} value={remuneration.nombre} onClick={() => handleOptionClick(remuneration)}>{remuneration.nombre}</option>
+                                ))
+                            }
+                        </>
+                    }
+                </DropdownInput>
+            </div> */}
 
             <div className="inputs-option remunerations">
                 <div id="remunerations-period">
@@ -144,10 +206,9 @@ export const Inputs: React.FC = () => {
                     }} />
                 </div>
                 <div id="select-remuneration">
-
                     <label htmlFor='remunerations-select'>Seleccione la remuneración: </label>
 
-                    <input type="text" value={selectedRemuneration?.nombre} className='trigger' readOnly />
+                    <input type="text" value={selectedRemuneration?.nombre} className='trigger' id="remunerations-input" readOnly />
                     <div className="dropdown-menu">
                         <datalist id='remunerations-datalist'>
                             {remunerations?.base &&
