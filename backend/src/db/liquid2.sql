@@ -38,7 +38,9 @@ CREATE TABLE categoria (
 	FOREIGN KEY (sector_id) REFERENCES sector(sector_id)
 );
 
-CREATE TYPE tipo_remuneracion AS ENUM('absoluta', 'relativa', 'formula');
+CREATE TYPE TIPO_REMUNERACION AS ENUM('absoluta', 'relativa', 'formula');
+
+CREATE TYPE TIPO_CONCEPTO AS ENUM('remunerativo', 'descuento', 'retencion');
 
 CREATE TABLE remuneracion (
 	remuneracion_id INT GENERATED ALWAYS AS IDENTITY,
@@ -46,8 +48,9 @@ CREATE TABLE remuneracion (
 	categoria_nombre VARCHAR(25) NOT NULL,
 	nombre VARCHAR(30) NOT NULL,
 	valor FLOAT DEFAULT '0',
-	tipo tipo_remuneracion DEFAULT 'absoluta',
+	tipo TIPO_REMUNERACION DEFAULT 'absoluta',
 	tipo_unidad VARCHAR(15),
+	tipo_concepto TIPO_CONCEPTO DEFAULT 'remunerativo',
 	reglas JSONB,
 	PRIMARY KEY (remuneracion_id),
 	FOREIGN KEY (sector_id) REFERENCES sector(sector_id),
@@ -105,6 +108,35 @@ CREATE TABLE empleado (
 	FOREIGN KEY (sector_id) REFERENCES sector(sector_id),
 	FOREIGN KEY (sector_id, categoria_nombre) REFERENCES categoria(sector_id, categoria_nombre)
 );
+
+CREATE OR REPLACE FUNCTION get_next_id(p_tipo TIPO_CONCEPTO)
+RETURNS INT AS $$
+DECLARE siguiente_id INT;
+BEGIN
+    LOCK TABLE remuneracion IN EXCLUSIVE MODE;
+    SELECT
+        COALESCE(MAX(remuneracion_id), 0) + 1 INTO siguiente_id
+    FROM
+        remuneracion
+    WHERE
+        tipo_concepto = p_tipo;
+    RETURN siguiente_id;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION generar_remuneracion_id()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.remuneracion_id := get_next_id(NEW.tipo_concepto);
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE TRIGGER remuneracion_insert_trigger
+BEFORE INSERT ON remuneracion
+FOR EACH ROW
+EXECUTE FUNCTION generar_remuneracion_id();
+
 
 INSERT INTO
 	sector (nombre, ley, sindicato, obra_social, cct)
