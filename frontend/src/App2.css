@@ -129,6 +129,14 @@ div.dropdown-menu {
     display: block;
 }
 
+.inputs-option input.error {
+    border: 1px solid red;
+}
+
+.inputs-option input.error:focus {
+    outline: 1px solid red;
+}
+
 .preview-table {
     display: table;
     width: 100%;
