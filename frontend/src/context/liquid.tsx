@@ -82,12 +82,14 @@ export const LiquidProvider = ({ children }: { children: React.ReactNode }) => {
         setEmployeeRemunerations([])
         if (employee) {
             if (useDB) {
-                fetch(`http://localhost:3000/remunerations/${employee?.sector_id}/category/${employee?.categoria_nombre}`)
+                fetch(`http://localhost:3000/remunerations/${employee.sector_id}/category/${employee.categoria_nombre}`)
                     .then(res => res.json())
                     .then(data => setRemunerations(data))
                     .catch(err => console.log(err))
             } else {
-                setRemunerations(mockDB.remunerations as Remunerations);
+                const newRemunerations = mockDB.remunerations[employee.categoria_nombre];
+                if (!newRemunerations) return;
+                setRemunerations(newRemunerations);
             }
 
         }
