@@ -25,9 +25,9 @@
                 "categoria_nombre": "Administrativo A",
                 "nombre_sector": "Comercio",
                 "ley": 20744,
-                "sindicato": "Sindicato",
-                "obra_social": "Obra social",
-                "cct": "123/45"
+                "sindicato": "FAECYS",
+                "obra_social": "OSECAC",
+                "cct": "130/75"
             }
         },
         {
@@ -55,9 +55,9 @@
                 "categoria_nombre": "Maestranza B",
                 "nombre_sector": "Comercio",
                 "ley": 20744,
-                "sindicato": "Sindicato",
-                "obra_social": "Obra social",
-                "cct": "123/45"
+                "sindicato": "FAECYS",
+                "obra_social": "OSECAC",
+                "cct": "130/75"
             }
         }
     ],

@@ -85,7 +85,9 @@ export const LiquidProvider = ({ children }: { children: React.ReactNode }) => {
                             })
                             .catch(err => console.log(err))
                     } else {
-                        setEmployee(mockDB.employees[0] as Employee);
+                        const newEmployee = mockDB.employees.find(employee => employee.legajo === employeeLegajo);
+                        if (!newEmployee) return;
+                        setEmployee(newEmployee as Employee);
                     }
                 }
             })
