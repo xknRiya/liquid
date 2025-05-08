@@ -132,15 +132,12 @@ export const LiquidProvider = ({ children }: { children: React.ReactNode }) => {
                         )
 
                         setRequiredRemunerations(newRequiredRemunerations as AllRemunerationsFront[]);
-                        const newTotalEmployeeRemunerations = newRequiredRemunerations.reduce((acum, remuneration) => acum + remuneration.valor, 0);
-                        setTotalEmployeeRemunerations(newTotalEmployeeRemunerations);
 
                         setRemunerations(newRemunerations as Remunerations);
                         setEmployeeRemunerations([newRemunerations.base] as AllRemunerationsFront[]);
                     }
                 })
             }
-
         }
     }, [employee])
 
@@ -170,7 +167,7 @@ export const LiquidProvider = ({ children }: { children: React.ReactNode }) => {
     useEffect(() => {
         const newTotalEmployeeConcepts = requiredRemunerations.reduce((acum, remuneration) => acum + remuneration.valor, totalEmployeeRemunerations);
         setTotalEmployeeConcepts(newTotalEmployeeConcepts);
-    }, [requiredRemunerations])
+    }, [requiredRemunerations, totalEmployeeRemunerations])
 
     useEffect(() => {
         if (useDB) {
@@ -203,7 +200,6 @@ export const LiquidProvider = ({ children }: { children: React.ReactNode }) => {
         } else if (indexOfSelectedRemuneration === -1) {
             newEmployeeRemunerations.push(selectedRemuneration)
         } else {
-            console.log('x', selectedRemuneration)
             newEmployeeRemunerations[indexOfSelectedRemuneration] = {
                 ...selectedRemuneration,
                 valor: selectedRemuneration.tipo === 'relativa' && remunerations ?
@@ -211,14 +207,17 @@ export const LiquidProvider = ({ children }: { children: React.ReactNode }) => {
                     selectedRemuneration.valor_base * selectedRemuneration.unidades
             };
         };
-        const newTotalEmployeeRemunerations = newEmployeeRemunerations.reduce((acum, remuneration) => acum + remuneration.valor, 0);
-        setTotalEmployeeRemunerations(newTotalEmployeeRemunerations);
         setEmployeeRemunerations([...newEmployeeRemunerations]);
     }, [selectedRemuneration])
 
     useEffect(() => {
         setSelectedRemuneration(undefined)
     }, [employee])
+
+    useEffect(() => {
+        const newTotalEmployeeRemunerations = employeeRemunerations.reduce((acum, remuneration) => acum + remuneration.valor, 0);
+        setTotalEmployeeRemunerations(newTotalEmployeeRemunerations);
+    }, [employeeRemunerations])
 
     return (
         <LiquidContext.Provider value={{

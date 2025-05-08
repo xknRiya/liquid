@@ -143,7 +143,7 @@ INSERT INTO
 VALUES
 	(
 		'Comercio',
-		'20744',
+		20744,
 		'Empleados de comercio y artículos civiles',
 		'OSECAC',
 		'130/75'
@@ -151,7 +151,7 @@ VALUES
 	('Rurales', '26727', 'UATRE', 'OSPRERA', '511/05'),
 	(
 		'Construcción',
-		'22250',
+		22250,
 		'UOCRA',
 		'OSPECOM',
 		'76/75'
