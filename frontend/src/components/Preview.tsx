@@ -1,5 +1,9 @@
 import { useLiquid } from "../hooks/useLiquid";
-import { AllRemunerationsFront, Employee, Employer } from "../interfaces";
+import {
+    // AllRemunerationsFront,
+    Employee,
+    Employer
+} from "../interfaces";
 
 const regex = /^(\d{2})(\d{8})(\d{1})$/;
 
@@ -66,7 +70,9 @@ const EmployeeInfo: React.FC<{ employee: Employee | undefined }> = ({ employee }
     );
 }
 
-const RemunerationsTable: React.FC<{ employeeRemunerations: AllRemunerationsFront[] }> = ({ employeeRemunerations }) => {
+// const RemunerationsTable: React.FC<{ employeeRemunerations: AllRemunerationsFront[], requiredRemunerations: AllRemunerationsFront[] }> = ({ employeeRemunerations, requiredRemunerations }) => {
+const RemunerationsTable: React.FC = () => {
+    const { employeeRemunerations, requiredRemunerations, totalEmployeeRemunerations, totalEmployeeConcepts } = useLiquid();
     return (
         <div id='employee-remunerations'>
             <table id='employee-remunerations-table' className='preview-table'>
@@ -89,15 +95,35 @@ const RemunerationsTable: React.FC<{ employeeRemunerations: AllRemunerationsFron
                             </tr>
                         ))
                     }
+                    {
+                        employeeRemunerations.length > 0 && (
+                            <tr className="bold">
+                                <td></td>
+                                <td>TOTAL REMUNERATIVO</td>
+                                <td></td>
+                                <td>{totalEmployeeRemunerations.toFixed(2)}</td>
+                            </tr>
+                        )
+                    }
+                    {
+                        requiredRemunerations?.sort((a, b) => a.remuneracion_id - b.remuneracion_id).map((remuneration) => (
+                            <tr key={remuneration.remuneracion_id} className='employee-remunerations-row'>
+                                <td>{remuneration.remuneracion_id}</td>
+                                <td>{remuneration.nombre}</td>
+                                <td>{remuneration.unidades}</td>
+                                <td className="employee-remunerations-table-value">{remuneration.valor && (remuneration.valor).toFixed(2)}</td>
+                            </tr>
+                        ))
+                    }
                 </tbody>
             </table>
             <table id="employee-remunerations-total" className='preview-table'>
                 <tbody>
-                    <tr className='employee-remunerations-row'>
+                    <tr className='employee-remunerations-row  bold'>
                         <td>Total</td>
                         <td></td>
                         <td></td>
-                        <td className="employee-remunerations-table-value">{employeeRemunerations.reduce((acum, remuneration) => acum + remuneration.valor * remuneration.unidades, 0).toFixed(2)}</td>
+                        <td className="employee-remunerations-table-value">{totalEmployeeConcepts.toFixed(2)}</td>
                     </tr>
                 </tbody>
             </table>
@@ -106,13 +132,15 @@ const RemunerationsTable: React.FC<{ employeeRemunerations: AllRemunerationsFron
 }
 
 export const Preview: React.FC = () => {
-    const { employeeRemunerations, employee, employer } = useLiquid();
+    // const { employeeRemunerations, employee, employer, requiredRemunerations } = useLiquid();
+    const { employee, employer } = useLiquid();
 
     return (
         <div id='preview-container'>
             <EmployerInfo employer={employer} />
             <EmployeeInfo employee={employee} />
-            <RemunerationsTable employeeRemunerations={employeeRemunerations} />
+            {/* <RemunerationsTable employeeRemunerations={employeeRemunerations} requiredRemunerations={requiredRemunerations} /> */}
+            <RemunerationsTable />
         </div>
 
     )

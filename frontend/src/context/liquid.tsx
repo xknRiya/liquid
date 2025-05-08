@@ -6,7 +6,6 @@ import mockDB from "../mocks/mock.json";
 
 const VITE_USE_DB = import.meta.env.VITE_USE_DB;
 
-
 interface LiquidContextType {
     inputValue: string;
     setInputValue: React.Dispatch<React.SetStateAction<string>>;
@@ -21,6 +20,7 @@ interface LiquidContextType {
     setPeriod: (period: Period) => void;
     requiredRemunerations: AllRemunerationsFront[];
     totalEmployeeRemunerations: number;
+    totalEmployeeConcepts: number;
     // setEmployeeRemunerations: (remunerations: AllRemunerationsFront[]) => void;
 }
 
@@ -42,7 +42,8 @@ export const LiquidProvider = ({ children }: { children: React.ReactNode }) => {
 
     const [requiredRemunerations, setRequiredRemunerations] = useState<AllRemunerationsFront[]>([])
 
-    const [totalEmployeeRemunerations, setTotalEmployeeRemunerations] = useState<number>(1)
+    const [totalEmployeeRemunerations, setTotalEmployeeRemunerations] = useState<number>(0)
+    const [totalEmployeeConcepts, setTotalEmployeeConcepts] = useState<number>(0)
 
     const legajoSet = useMemo(() => new Set(employees.map(employee => employee.legajo)), [employees])
 
@@ -130,24 +131,18 @@ export const LiquidProvider = ({ children }: { children: React.ReactNode }) => {
                             remuneration.obligatorio
                         )
 
-                        console.log(newRequiredRemunerations)
                         setRequiredRemunerations(newRequiredRemunerations as AllRemunerationsFront[]);
-                        setEmployeeRemunerations(newRequiredRemunerations as AllRemunerationsFront[]);
-
                         const newTotalEmployeeRemunerations = newRequiredRemunerations.reduce((acum, remuneration) => acum + remuneration.valor, 0);
                         setTotalEmployeeRemunerations(newTotalEmployeeRemunerations);
 
                         setRemunerations(newRemunerations as Remunerations);
+                        setEmployeeRemunerations([newRemunerations.base] as AllRemunerationsFront[]);
                     }
                 })
             }
 
         }
     }, [employee])
-
-    // useEffect(() => {
-    //     setEmployeeRemunerations([...requiredRemunerations, ...employeeRemunerations])
-    // }, [requiredRemunerations])
 
     useEffect(() => {
         const newEmployeeRemunerations = employeeRemunerations.map(remuneration => {
@@ -159,7 +154,23 @@ export const LiquidProvider = ({ children }: { children: React.ReactNode }) => {
             }
         })
         setEmployeeRemunerations(newEmployeeRemunerations)
+
+        const newRequiredRemunerations = requiredRemunerations.map(remuneration => {
+            return {
+                ...remuneration,
+                valor: remuneration.tipo === 'relativa' && remuneration.obligatorio ?
+                    totalEmployeeRemunerations * remuneration.valor_base / 100 * remuneration.unidades :
+                    remuneration.valor
+            }
+        })
+
+        setRequiredRemunerations(newRequiredRemunerations)
     }, [totalEmployeeRemunerations])
+
+    useEffect(() => {
+        const newTotalEmployeeConcepts = requiredRemunerations.reduce((acum, remuneration) => acum + remuneration.valor, totalEmployeeRemunerations);
+        setTotalEmployeeConcepts(newTotalEmployeeConcepts);
+    }, [requiredRemunerations])
 
     useEffect(() => {
         if (useDB) {
@@ -205,6 +216,10 @@ export const LiquidProvider = ({ children }: { children: React.ReactNode }) => {
         setEmployeeRemunerations([...newEmployeeRemunerations]);
     }, [selectedRemuneration])
 
+    useEffect(() => {
+        setSelectedRemuneration(undefined)
+    }, [employee])
+
     return (
         <LiquidContext.Provider value={{
             inputValue,
@@ -219,7 +234,8 @@ export const LiquidProvider = ({ children }: { children: React.ReactNode }) => {
             period,
             setPeriod,
             requiredRemunerations,
-            totalEmployeeRemunerations
+            totalEmployeeRemunerations,
+            totalEmployeeConcepts
         }}>
             {children}
         </LiquidContext.Provider>

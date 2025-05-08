@@ -242,3 +242,7 @@ td {
 table, tbody, tr {
     width: 100%;
 }
+
+tr.bold>td {
+    font-weight: bold;
+}

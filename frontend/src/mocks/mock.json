@@ -72,7 +72,7 @@
                 "remuneracion_id": 1,
                 "sector_id": 1,
                 "categoria_nombre": "Administrativo A",
-                "nombre": "Salario",
+                "nombre": "Salario Básico",
                 "tipo": "absoluta",
                 "tipo_concepto": "remunerativo",
                 "valor_base": 815260
@@ -131,6 +131,78 @@
                     "remuneracion_id": 203,
                     "sector_id": 1,
                     "categoria_nombre": "Administrativo A",
+                    "nombre": "Cuota/s Sindical",
+                    "tipo": "relativa",
+                    "tipo_concepto": "ret/ded",
+                    "valor_base": -2,
+                    "obligatorio": true
+                }
+            ]
+        },
+        "Maestranza B": {
+            "base": {
+                "remuneracion_id": 1,
+                "sector_id": 2,
+                "categoria_nombre": "Maestranza B",
+                "nombre": "Salario Básico",
+                "tipo": "absoluta",
+                "tipo_concepto": "remunerativo",
+                "valor_base": 808831
+            },
+            "remunerations": [
+                {
+                    "remuneracion_id": 2,
+                    "sector_id": 2,
+                    "categoria_nombre": "Maestranza B",
+                    "nombre": "Vacaciones proporcionales 2024",
+                    "tipo": "relativa",
+                    "tipo_unidad": "día",
+                    "tipo_concepto": "remunerativo",
+                    "valor_base": 4
+                },
+                {
+                    "remuneracion_id": 3,
+                    "sector_id": 2,
+                    "categoria_nombre": "Maestranza B",
+                    "nombre": "Presentismo",
+                    "tipo": "relativa",
+                    "tipo_concepto": "remunerativo",
+                    "valor_base": 8.33
+                },
+                {
+                    "remuneracion_id": 200,
+                    "sector_id": 2,
+                    "categoria_nombre": "Maestranza B",
+                    "nombre": "Jubilacion",
+                    "tipo": "relativa",
+                    "tipo_concepto": "ret/ded",
+                    "valor_base": -11,
+                    "obligatorio": true
+                },
+                {
+                    "remuneracion_id": 201,
+                    "sector_id": 2,
+                    "categoria_nombre": "Maestranza B",
+                    "nombre": "INSSJP",
+                    "tipo": "relativa",
+                    "tipo_concepto": "ret/ded",
+                    "valor_base": -3,
+                    "obligatorio": true
+                },
+                {
+                    "remuneracion_id": 202,
+                    "sector_id": 2,
+                    "categoria_nombre": "Maestranza B",
+                    "nombre": "Obra Social",
+                    "tipo": "relativa",
+                    "tipo_concepto": "ret/ded",
+                    "valor_base": -3,
+                    "obligatorio": true
+                },
+                {
+                    "remuneracion_id": 203,
+                    "sector_id": 2,
+                    "categoria_nombre": "Maestranza B",
                     "nombre": "Cuota/s Sindical",
                     "tipo": "relativa",
                     "tipo_concepto": "ret/ded",
