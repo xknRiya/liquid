@@ -31,7 +31,7 @@ export interface EmployeeMin {
 export interface Sector {
     categoria_nombre: string;
     nombre_sector: string;
-    ley: string;
+    ley: number;
     sindicato: string;
     obra_social: string;
     cct: string;
@@ -76,7 +76,10 @@ export interface BaseRemuneration {
     categoria_nombre: string;
     nombre: string;
     tipo: string;
+    tipo_concepto?: string;
     tipo_unidad?: string;
+    obligatorio?: boolean;
+    valor_base: number;
 }
 
 export interface BasicRemuneration extends BaseRemuneration {

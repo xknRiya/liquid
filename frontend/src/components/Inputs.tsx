@@ -45,8 +45,8 @@ const InputContainer: React.FC<InputContainerProps> = ({ label, id, value, onCha
 //             ...remuneration,
 //             unidades: 1,
 //             valor: remuneration.tipo === 'relativa' ?
-//                 remunerations.base.valor * remuneration.valor / 100 :
-//                 remuneration.valor
+//                 remunerations.base.valor * remuneration.valor_base / 100 :
+//                 remuneration.valor_base
 //         };
 //         setSelectedRemuneration(newRemuneration);
 //     };
@@ -120,7 +120,7 @@ export const Inputs: React.FC = () => {
             ...remuneration,
             unidades: 1,
             valor: remuneration.tipo === 'relativa' ?
-                remunerations.base.valor * remuneration.valor / 100 :
+                (remunerations.base.valor || 0) * remuneration.valor_base / 100 :
                 remuneration.valor
         };
         setSelectedRemuneration(newRemuneration);
@@ -130,12 +130,16 @@ export const Inputs: React.FC = () => {
         const value = parseInt(event.target.value);
         if (isNaN(value) || value < 0) return;
         if (!selectedRemuneration) return;
+        console.log(selectedRemuneration.tipo, selectedRemuneration.valor_base)
         setSelectedRemuneration({
             ...selectedRemuneration,
-            unidades: parseInt(event.target.value)
+            unidades: value,
+            valor: selectedRemuneration.tipo === 'relativa' && remunerations ?
+                (remunerations?.base.valor * selectedRemuneration.valor_base / 100) * value :
+                selectedRemuneration.valor_base * value
         });
     };
-
+    if (selectedRemuneration) console.log(selectedRemuneration.unidades);
     return (
         <div id='inputs'>
             <div className='inputs-option'>
@@ -228,8 +232,8 @@ export const Inputs: React.FC = () => {
                     selectedRemuneration && (
                         <>
                             <InputContainer label={`Unidades` + (selectedRemuneration.tipo_unidad != null ? ` (${selectedRemuneration.tipo_unidad})` : '') + ': '} id="remuneration-units" value={selectedRemuneration.unidades} onChange={selectedRemunerationUnitsOnChange} type="number" />
-                            <InputContainer label="Valor base: " id="remuneration-base-value" prefix="$" value={selectedRemuneration.valor.toFixed(2)} onChange={() => { }} disabled />
-                            <InputContainer label="Valor: " id="remuneration-value" prefix="$" value={(selectedRemuneration.valor * selectedRemuneration.unidades).toFixed(2)} onChange={() => { }} disabled />
+                            <InputContainer label="Valor base: " id="remuneration-base-value" prefix="$" value={(selectedRemuneration.tipo === 'relativa' ? (selectedRemuneration.valor_base * (remunerations?.base.valor_base || 0) / 100) : selectedRemuneration.valor_base).toFixed(2)} onChange={() => { }} disabled />
+                            <InputContainer label="Valor: " id="remuneration-value" prefix="$" value={(selectedRemuneration.valor).toFixed(2)} onChange={() => { }} disabled />
                         </>
                     )
                 }

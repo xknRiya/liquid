@@ -19,6 +19,8 @@ interface LiquidContextType {
     employeeRemunerations: AllRemunerationsFront[];
     period: Period;
     setPeriod: (period: Period) => void;
+    requiredRemunerations: AllRemunerationsFront[];
+    totalEmployeeRemunerations: number;
     // setEmployeeRemunerations: (remunerations: AllRemunerationsFront[]) => void;
 }
 
@@ -38,6 +40,10 @@ export const LiquidProvider = ({ children }: { children: React.ReactNode }) => {
     const [employeeRemunerations, setEmployeeRemunerations] = useState<AllRemunerationsFront[]>([])
     const [selectedRemuneration, setSelectedRemuneration] = useState<AllRemunerationsFront>()
 
+    const [requiredRemunerations, setRequiredRemunerations] = useState<AllRemunerationsFront[]>([])
+
+    const [totalEmployeeRemunerations, setTotalEmployeeRemunerations] = useState<number>(1)
+
     const legajoSet = useMemo(() => new Set(employees.map(employee => employee.legajo)), [employees])
 
     const debouncedGetEmployees = useCallback(debounce((query: number) => {
@@ -50,7 +56,15 @@ export const LiquidProvider = ({ children }: { children: React.ReactNode }) => {
                     )
                     .catch(err => console.log(err))
             } else {
-                setEmployees(mockDB.employees);
+                const newEmployees = mockDB.employees.map(employee => {
+                    return {
+                        legajo: employee.legajo as number,
+                        cuit: employee.cuit as number,
+                        nombre: employee.nombre as string,
+                        apellido: employee.apellido as string,
+                    }
+                });
+                setEmployees(newEmployees);
             }
         }
     }, 300), [employee]);
@@ -87,13 +101,63 @@ export const LiquidProvider = ({ children }: { children: React.ReactNode }) => {
                     .then(data => setRemunerations(data))
                     .catch(err => console.log(err))
             } else {
-                const newRemunerations = mockDB.remunerations[employee.categoria_nombre];
-                if (!newRemunerations) return;
-                setRemunerations(newRemunerations);
+                Object.keys(mockDB.remunerations).forEach(key => {
+                    if (key === employee.categoria_nombre) {
+                        const response = mockDB.remunerations[key as keyof typeof mockDB.remunerations]
+                        const processedRemunerations = response.remunerations.map(remuneration => {
+                            return {
+                                ...remuneration,
+                                unidades: 1,
+                                valor: remuneration.tipo === 'relativa' && remuneration.obligatorio ?
+                                    totalEmployeeRemunerations * remuneration.valor_base / 100 :
+                                    remuneration.valor_base
+                            }
+                        })
+
+                        const newRemunerations = {
+                            base: {
+                                ...response.base,
+                                unidades: 1,
+                                valor: response.base.valor_base
+                            },
+                            remunerations: processedRemunerations.filter(remuneration => !remuneration.obligatorio)
+                        }
+
+                        if (!newRemunerations) return;
+                        const newRequiredRemunerations = processedRemunerations.filter(remuneration =>
+                            remuneration.obligatorio
+                        )
+
+                        console.log(newRequiredRemunerations)
+                        setRequiredRemunerations(newRequiredRemunerations as AllRemunerationsFront[]);
+                        setEmployeeRemunerations(newRequiredRemunerations as AllRemunerationsFront[]);
+
+                        const newTotalEmployeeRemunerations = newRequiredRemunerations.reduce((acum, remuneration) => acum + remuneration.valor, 0);
+                        setTotalEmployeeRemunerations(newTotalEmployeeRemunerations);
+
+                        setRemunerations(newRemunerations as Remunerations);
+                    }
+                })
             }
 
         }
     }, [employee])
+
+    // useEffect(() => {
+    //     setEmployeeRemunerations([...requiredRemunerations, ...employeeRemunerations])
+    // }, [requiredRemunerations])
+
+    useEffect(() => {
+        const newEmployeeRemunerations = employeeRemunerations.map(remuneration => {
+            return {
+                ...remuneration,
+                valor: remuneration.tipo === 'relativa' && remuneration.obligatorio ?
+                    totalEmployeeRemunerations * remuneration.valor_base / 100 * remuneration.unidades :
+                    remuneration.valor
+            }
+        })
+        setEmployeeRemunerations(newEmployeeRemunerations)
+    }, [totalEmployeeRemunerations])
 
     useEffect(() => {
         if (useDB) {
@@ -121,12 +185,22 @@ export const LiquidProvider = ({ children }: { children: React.ReactNode }) => {
         const indexOfSelectedRemuneration = employeeRemunerations.findIndex(remuneration => remuneration.remuneracion_id === selectedRemuneration.remuneracion_id);
         let newEmployeeRemunerations = [...employeeRemunerations];
 
-        if (selectedRemuneration.unidades === 0 && indexOfSelectedRemuneration != -1) newEmployeeRemunerations = [...newEmployeeRemunerations.slice(0, indexOfSelectedRemuneration), ...newEmployeeRemunerations.slice(indexOfSelectedRemuneration + 1)];
-        else if (indexOfSelectedRemuneration === -1) newEmployeeRemunerations.push(selectedRemuneration);
-        else newEmployeeRemunerations[indexOfSelectedRemuneration] = selectedRemuneration;
-
-        setEmployeeRemunerations(newEmployeeRemunerations);
-
+        if (selectedRemuneration.unidades === 0 && indexOfSelectedRemuneration != -1) {
+            newEmployeeRemunerations = [...newEmployeeRemunerations.slice(0, indexOfSelectedRemuneration), ...newEmployeeRemunerations.slice(indexOfSelectedRemuneration + 1)]
+        } else if (indexOfSelectedRemuneration === -1) {
+            newEmployeeRemunerations.push(selectedRemuneration)
+        } else {
+            console.log('x', selectedRemuneration)
+            newEmployeeRemunerations[indexOfSelectedRemuneration] = {
+                ...selectedRemuneration,
+                valor: selectedRemuneration.tipo === 'relativa' && remunerations ?
+                    (remunerations?.base.valor * selectedRemuneration.valor_base / 100) * selectedRemuneration.unidades :
+                    selectedRemuneration.valor_base * selectedRemuneration.unidades
+            };
+        };
+        const newTotalEmployeeRemunerations = newEmployeeRemunerations.reduce((acum, remuneration) => acum + remuneration.valor, 0);
+        setTotalEmployeeRemunerations(newTotalEmployeeRemunerations);
+        setEmployeeRemunerations([...newEmployeeRemunerations]);
     }, [selectedRemuneration])
 
     return (
@@ -142,6 +216,8 @@ export const LiquidProvider = ({ children }: { children: React.ReactNode }) => {
             employeeRemunerations,
             period,
             setPeriod,
+            requiredRemunerations,
+            totalEmployeeRemunerations
         }}>
             {children}
         </LiquidContext.Provider>

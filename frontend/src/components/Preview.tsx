@@ -23,7 +23,7 @@ const EmployerInfo: React.FC<{ employer: Employer | undefined }> = ({ employer }
 const EmployeeSectorInfo: React.FC<{ employee: Employee | undefined }> = ({ employee }) => {
     return (
         <div id='employee-sector-info'>
-            <p id='employee-sector-ley'>Ley: <span id='employee-sector-ley-span'>{employee ? new Intl.NumberFormat('es-ES', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(parseInt(employee.sector.ley)) : ''}</span></p>
+            <p id='employee-sector-ley'>Ley: <span id='employee-sector-ley-span'>{employee ? new Intl.NumberFormat('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(employee.sector.ley) : ''}</span></p>
             <p id='employee-sector-sindicato'>Sindicato: <span id='employee-sector-sindicato-span'>{employee?.sector.sindicato}</span></p>
             <p id='employee-sector-obra-social'>Obra social: <span id='employee-sector-obra-social-span'>{employee?.sector.obra_social}</span></p>
             <p id='employee-sector-cct'>CCT: <span id='employee-sector-cct-span'>{employee?.sector.cct}</span></p>
@@ -32,11 +32,24 @@ const EmployeeSectorInfo: React.FC<{ employee: Employee | undefined }> = ({ empl
 };
 
 const PeriodInfo: React.FC = () => {
-    const { period } = useLiquid();
+    const { employee, period } = useLiquid();
     return (
         <div id='period-info'>
             <p> Período: {String(period.month).padStart(2, '0')} / {period.year} </p>
+            {employee && (
+                <>
+                    <p>
+                        Fecha de ingreso: <span className="no-wrap"> {employee?.fecha_ingreso} </span>
+                    </p>
+                    <p>
+                        Antigüedad:  {(new Date(employee.fecha_ingreso)).getFullYear() - period.year} años
+                    </p>
+                </>
+            )
+            }
+
         </div >
+
     );
 }
 
@@ -72,7 +85,7 @@ const RemunerationsTable: React.FC<{ employeeRemunerations: AllRemunerationsFron
                                 <td>{remuneration.remuneracion_id}</td>
                                 <td>{remuneration.nombre}</td>
                                 <td>{remuneration.unidades}</td>
-                                <td className="employee-remunerations-table-value">{remuneration.valor && (remuneration.valor * remuneration.unidades).toFixed(2)}</td>
+                                <td className="employee-remunerations-table-value">{remuneration.valor && (remuneration.valor).toFixed(2)}</td>
                             </tr>
                         ))
                     }
