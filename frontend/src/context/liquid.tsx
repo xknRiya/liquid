@@ -52,9 +52,7 @@ export const LiquidProvider = ({ children }: { children: React.ReactNode }) => {
             if (useDB) {
                 fetch(`http://localhost:3000/employees/inexact/${query}`)
                     .then(res => res.json())
-                    .then(data =>
-                        setEmployees(data)
-                    )
+                    .then(data => setEmployees(data))
                     .catch(err => console.log(err))
             } else {
                 const newEmployees = mockDB.employees.map(employee => {
@@ -132,7 +130,6 @@ export const LiquidProvider = ({ children }: { children: React.ReactNode }) => {
                         )
 
                         setRequiredRemunerations(newRequiredRemunerations as AllRemunerationsFront[]);
-
                         setRemunerations(newRemunerations as Remunerations);
                         setEmployeeRemunerations([newRemunerations.base] as AllRemunerationsFront[]);
                     }
@@ -159,8 +156,7 @@ export const LiquidProvider = ({ children }: { children: React.ReactNode }) => {
                     totalEmployeeRemunerations * remuneration.valor_base / 100 * remuneration.unidades :
                     remuneration.valor
             }
-        })
-
+        });
         setRequiredRemunerations(newRequiredRemunerations)
     }, [totalEmployeeRemunerations])
 
@@ -188,7 +184,7 @@ export const LiquidProvider = ({ children }: { children: React.ReactNode }) => {
         } else {
             debouncedGetEmployees(value);
         };
-    }, [inputValue])
+    }, [inputValue, legajoSet])
 
     useEffect(() => {
         if (!selectedRemuneration) return;
