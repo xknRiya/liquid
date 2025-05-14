@@ -115,13 +115,22 @@ const RemunerationsTable: React.FC = () => {
                             </tr>
                         ))
                     }
+                    {
+                        employeeRemunerations.length > 0 &&
+                        <tr className="bold">
+                            <td></td>
+                            <td>TOTAL DEDUCCIONES</td>
+                            <td></td>
+                            <td className="employee-remunerations-table-value">{requiredRemunerations.reduce((acc, remuneration) => acc + remuneration.valor, 0).toFixed(2)}</td>
+                        </tr>
+                    }
                 </tbody>
             </table>
             <table id="employee-remunerations-total" className='preview-table'>
                 <tbody>
                     <tr className='employee-remunerations-row  bold'>
-                        <td>Total</td>
                         <td></td>
+                        <td>TOTAL HABERES NETOS</td>
                         <td></td>
                         <td className="employee-remunerations-table-value">{totalEmployeeConcepts.toFixed(2)}</td>
                     </tr>
@@ -132,14 +141,12 @@ const RemunerationsTable: React.FC = () => {
 }
 
 export const Preview: React.FC = () => {
-    // const { employeeRemunerations, employee, employer, requiredRemunerations } = useLiquid();
     const { employee, employer } = useLiquid();
 
     return (
         <div id='preview-container'>
             <EmployerInfo employer={employer} />
             <EmployeeInfo employee={employee} />
-            {/* <RemunerationsTable employeeRemunerations={employeeRemunerations} requiredRemunerations={requiredRemunerations} /> */}
             <RemunerationsTable />
         </div>
 

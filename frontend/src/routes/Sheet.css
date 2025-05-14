@@ -1,0 +1,23 @@
+#sheet {
+    width: 100%;
+    display: grid;
+    text-align: left;
+}
+
+#sheet>*>div.row, #sheet>div.row {
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    height: 36px;
+}
+
+div.row>input {
+    max-height: 100%;
+}
+
+#sheet>*>div.column, #sheet>div.column {
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    border-bottom: 1px solid var(--border-color-info);
+}

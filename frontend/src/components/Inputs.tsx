@@ -140,6 +140,13 @@ export const Inputs: React.FC = () => {
         });
     };
     if (selectedRemuneration) console.log(selectedRemuneration.unidades);
+
+    const managePeriodChange = ({ month, year }: { month?: number, year?: number }) => {
+        const newPeriod = { month: month || period.month, year: year || period.year };
+        if (newPeriod.year < 0 || newPeriod.year > (new Date()).getFullYear()) return;
+        if (newPeriod.month > 12 || newPeriod.month < 0) return;
+        setPeriod(newPeriod)
+    };
     return (
         <div id='inputs'>
             <div className='inputs-option'>
@@ -188,26 +195,33 @@ export const Inputs: React.FC = () => {
             <div className="inputs-option remunerations">
                 <div id="remunerations-period">
                     <label htmlFor='remunerations-period'>Período: </label>
-                    <input type="text" id="remunerations-period-month" name="remunerations-period-month" value={period.month} onKeyDown={(e) => {
-                        if (e.key === 'ArrowDown') {
-                            e.currentTarget.value = String(parseInt(e.currentTarget.value) - 1);
-                        } else if (e.key === 'ArrowUp') {
-                            e.currentTarget.value = String(parseInt(e.currentTarget.value) + 1);
-                        }
-                        console.log('onkeydown')
-                    }}
+                    <input type="text" id="remunerations-period-month" name="remunerations-period-month" value={period.month}
+                        onKeyDown={(e) => {
+                            let newMonth = parseInt(e.currentTarget.value);
+                            if (e.key === 'ArrowDown') {
+                                newMonth--
+                            } else if (e.key === 'ArrowUp') {
+                                newMonth++
+                            }
+                            managePeriodChange({ month: newMonth });
+                        }}
                         onChange={(event) => {
-                            console.log('onchange')
-                            const newPeriod = { month: parseInt(event.target.value) || 0, year: period.year };
-                            if (newPeriod.month > 12 || newPeriod.month < 0) return;
-                            setPeriod(newPeriod)
+                            managePeriodChange({ month: parseInt(event.target.value) });
                         }} />
                     <span> / </span>
-                    <input type="text" id="remunerations-period-year" name="remunerations-period-year" value={period.year} onChange={(event) => {
-                        const newPeriod = { month: period.month, year: parseInt(event.target.value) || 0 };
-                        if (newPeriod.year < 0 || newPeriod.year > (new Date()).getFullYear()) return;
-                        setPeriod(newPeriod)
-                    }} />
+                    <input type="text" id="remunerations-period-year" name="remunerations-period-year" value={period.year}
+                        onKeyDown={(e) => {
+                            let newYear = parseInt(e.currentTarget.value);
+                            if (e.key === 'ArrowDown') {
+                                newYear--
+                            } else if (e.key === 'ArrowUp') {
+                                newYear++
+                            }
+                            managePeriodChange({ year: newYear });
+                        }}
+                        onChange={(event) => {
+                            managePeriodChange({ year: parseInt(event.target.value) });
+                        }} />
                 </div>
                 <div id="select-remuneration">
                     <label htmlFor='remunerations-select'>Seleccione la remuneración: </label>

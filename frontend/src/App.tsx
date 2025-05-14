@@ -1,16 +1,24 @@
 // import React from 'react'
 import './App.css'
 import './App2.css'
+import { Navbar } from './components/Navbar'
 
-import { Preview } from './components/Preview'
-import { Inputs } from './components/Inputs'
 import { LiquidProvider } from './context/liquid'
+import { Liquid } from './routes/Liquid'
+
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { Sheet } from './routes/Sheet'
 
 function App() {
   return (
     <LiquidProvider>
-      <Inputs />
-      <Preview />
+      <BrowserRouter>
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Liquid />} />
+          <Route path="/sheet" element={<Sheet />} />
+        </Routes>
+      </BrowserRouter>
     </LiquidProvider>
   )
 }
