@@ -98,6 +98,33 @@
                     "valor_base": 8.33
                 },
                 {
+                    "remuneracion_id": 4,
+                    "sector_id": 1,
+                    "categoria_nombre": "Administrativo A",
+                    "nombre": "Antiguedad",
+                    "tipo": "relativa",
+                    "tipo_concepto": "remunerativo",
+                    "valor_base": 1
+                },
+                {
+                    "remuneracion_id": 5,
+                    "sector_id": 1,
+                    "categoria_nombre": "Administrativo A",
+                    "nombre": "Hora Extra al 50%",
+                    "tipo": "relativa",
+                    "tipo_concepto": "remunerativo",
+                    "valor_base": 0.5
+                },
+                {
+                    "remuneracion_id": 6,
+                    "sector_id": 1,
+                    "categoria_nombre": "Administrativo A",
+                    "nombre": "Hora Extra al 100%",
+                    "tipo": "relativa",
+                    "tipo_concepto": "remunerativo",
+                    "valor_base": 1
+                },
+                {
                     "remuneracion_id": 200,
                     "sector_id": 1,
                     "categoria_nombre": "Administrativo A",
