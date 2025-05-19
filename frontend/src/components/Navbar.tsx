@@ -8,7 +8,7 @@ export const Navbar: React.FC = () => {
             <div id='navbar-menu'>
                 <ul>
                     <li><Link to="/liquid">Liquidación</Link></li>
-                    <li><Link to="/liquid/sheet">{"<Sin terminar>"}</Link></li>
+                    <li><Link to="/liquid/sheet">{"En proceso..."}</Link></li>
                 </ul>
             </div>
         </div>
