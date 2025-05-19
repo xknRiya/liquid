@@ -1,6 +1,6 @@
 import './Sheet.css'
 
-const Row = ({ children }: { children: React.ReactNode }) => {
+export const Row = ({ children }: { children: React.ReactNode }) => {
     return (
         <div className='row'>
             {children}
@@ -8,7 +8,7 @@ const Row = ({ children }: { children: React.ReactNode }) => {
     )
 }
 
-const Column = ({ children }: { children: React.ReactNode }) => {
+export const Column = ({ children }: { children: React.ReactNode }) => {
     return (
         <div className='column'>
             {children}
