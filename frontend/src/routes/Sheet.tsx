@@ -33,24 +33,24 @@ const Input = ({ className, children }: { className?: string, children: React.Re
 export const Sheet: React.FC = () => {
 
     const [currentPage, setCurrentPage] = useState(1);
-    const [formData, setFormData] = useState({
-        nombre: '',
-        email: '',
-        telefono: '',
-        direccion: '',
-        ciudad: '',
-        pais: '',
-    });
+    // const [formData, setFormData] = useState({
+    //     nombre: '',
+    //     email: '',
+    //     telefono: '',
+    //     direccion: '',
+    //     ciudad: '',
+    //     pais: '',
+    // });
 
     const totalPages = 4;
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prevData) => ({
-            ...prevData,
-            [name]: value,
-        }));
-    };
+    // const handleChange = (e) => {
+    //     const { name, value } = e.target;
+    //     setFormData((prevData) => ({
+    //         ...prevData,
+    //         [name]: value,
+    //     }));
+    // };
 
     const handlePrev = () => {
         setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
@@ -60,9 +60,10 @@ export const Sheet: React.FC = () => {
         setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
     };
 
-    const handleSubmit = (e) => {
+    const handleButton = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
     };
+
     return (
         <div id='sheet'>
             <p>Página {currentPage} de {totalPages}</p>
@@ -225,7 +226,7 @@ export const Sheet: React.FC = () => {
                     <button
                         type="submit"
                         className='submit-button'
-                        onClick={handleSubmit}
+                        onClick={handleButton}
                     >
                         Enviar Formulario
                     </button>
