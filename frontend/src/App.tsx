@@ -15,8 +15,8 @@ function App() {
       <BrowserRouter>
         <Navbar />
         <Routes>
-          <Route path="/" element={<Liquid />} />
-          <Route path="/sheet" element={<Sheet />} />
+          <Route path="/liquid" element={<Liquid />} />
+          <Route path="/liquid/sheet" element={<Sheet />} />
         </Routes>
       </BrowserRouter>
     </LiquidProvider>
